@@ -5,7 +5,12 @@
  */
 package com.hola.demo.repository;
 
+import com.hola.demo.modelo.Client;
+import com.hola.demo.modelo.Message;
+import com.hola.demo.modelo.Motorbike;
 import com.hola.demo.modelo.Reservation;
+import com.hola.demo.modelocustom.CountClient;
+import com.hola.demo.modelocustom.CountMotorbike;
 import com.hola.demo.repositorycrud.ReservationCrudRepository;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +39,32 @@ public class ReservationRepository {
     }
     public void delete(Reservation reservation){
         reservationCrudRepository.delete(reservation);
+    }
+     public  List<CountMotorbike> getTopMotorbikes(){
+        List<CountMotorbike>res=new ArrayList<>();
+        List<Object[]>report=reservationCrudRepository.countTotalReservationsByMotorbike();
+        for(int i=0;i<report.size();i++){
+            res.add(new CountMotorbike((Long)report.get(i)[1],(Motorbike) report.get(i)[0]));
+        }
+        return res;
+    }
+
+
+    public  List<CountClient> getTopClients(){
+        List<CountClient>res=new ArrayList<>();
+        List<Object[]>report=reservationCrudRepository.countTotalReservationsByClient();
+        for(int i=0;i<report.size();i++){
+            res.add(new CountClient((Long)report.get(i)[1],(Client) report.get(i)[0]));
+        }
+        return res;
+    }
+
+    public List<Reservation> getReservationPeriod(Date a, Date b){
+        return reservationCrudRepository.findAllByStartDateAfterAndStartDateBefore(a,b);
+    }
+
+    public List<Reservation> getReservationsByStatus(String status){
+        return reservationCrudRepository.findAllByStatus(status);
     }
 
     

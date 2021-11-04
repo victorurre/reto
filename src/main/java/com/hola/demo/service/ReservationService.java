@@ -6,6 +6,9 @@
 package com.hola.demo.service;
 
 import com.hola.demo.modelo.Reservation;
+import com.hola.demo.modelocustom.StatusAmount;
+import com.hola.demo.modelocustom.CountClient;
+import com.hola.demo.modelocustom.CountMotorbike;
 import com.hola.demo.repository.ReservationRepository;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,6 +81,36 @@ public class ReservationService {
         return aBoolean;
     }
 
+   public List<CountMotorbike> getTopMotorbikes(){
+        return reservationRepository.getTopMotorbikes();
+    }
 
+    public List<CountClient> getTopClients(){
+        return reservationRepository.getTopClients();
+    }
+
+    public List<Reservation> getReservationsPeriod(String dateA, String dateB){
+        SimpleDateFormat parser=new SimpleDateFormat("yyyy-MM-dd");
+        Date a= new Date();
+        Date b=new Date();
+        try {
+            a = parser.parse(dateA);
+            b = parser.parse(dateB);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(a.before(b)){
+            return reservationRepository.getReservationPeriod(a,b);
+        }else{
+            return new ArrayList<>();
+        }
+
+    }
+    public StatusAmount getReservationsStatusReport(){
+        List<Reservation>completed=reservationRepository.getReservationsByStatus("completed");
+        List<Reservation>cancelled=reservationRepository.getReservationsByStatus("cancelled");
+        return new StatusAmount(completed.size(),cancelled.size());
+
+    }
     
 }

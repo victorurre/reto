@@ -6,6 +6,9 @@
 package com.hola.demo.web;
 
 import com.hola.demo.modelo.Reservation;
+import com.hola.demo.modelocustom.CountClient;
+import com.hola.demo.modelocustom.CountMotorbike;
+import com.hola.demo.modelocustom.StatusAmount;
 import com.hola.demo.service.ReservationService;
 import java.util.List;
 import java.util.Optional;
@@ -59,4 +62,27 @@ public class ReservationController {
         return reservationService.deleteReservation(reservationId);
     }
     
+      @GetMapping("/report-cars")
+    public List<CountMotorbike> getReservationsReportMotorbike(){
+        return reservationService.getTopMotorbikes();
+    }
+
+    @GetMapping("/report-clients")
+    public List<CountClient> getReservationsReportClient(){
+        return reservationService.getTopClients();
+    }
+
+    @GetMapping("/report-dates/{dateOne}/{dateTwo}")
+    public List<Reservation> getReservationsReportDates(@PathVariable("dateOne") String dateOne,@PathVariable("dateTwo") String dateTwo){
+        return reservationService.getReservationsPeriod(dateOne,dateTwo);
+    }
+    @GetMapping("/report-dates/amount/{dateOne}/{dateTwo}")
+    public Integer getReservationsReportDatesAmount(@PathVariable("dateOne") String dateOne,@PathVariable("dateTwo") String dateTwo){
+        return reservationService.getReservationsPeriod(dateOne,dateTwo).size();
+    }
+
+    @GetMapping("/report-status")
+    public StatusAmount getReservationsStatusReport(){
+        return reservationService.getReservationsStatusReport();
+    }
 }
